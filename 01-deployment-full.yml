@@ -1,0 +1,96 @@
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: spring-boot-app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: spring-boot-app
+  minReplicas: 1
+  maxReplicas: 15
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 100
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+#v2beta1
+#  metrics:
+#    - resource:
+#        name: cpu
+#        targetAverageUtilization: 100
+#      type: Resource
+#    - resource:
+#        name: memory
+#        targetAverageUtilization: 100
+#      type: Resource
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-boot-app
+  labels:
+    component: spring-boot-app
+spec:
+  ports:
+    - port: 8080
+      nodePort: 30080
+  selector:
+    component: spring-boot-app
+  type: "NodePort"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-app
+  labels:
+    component: spring-boot-app
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      component: "spring-boot-app"
+  template:
+    metadata:
+      labels:
+        component: "spring-boot-app"
+    spec:
+      containers:
+        - name: spring-boot-app
+          image: "spring-boot-app:latest"
+          imagePullPolicy: "Never"
+          ports:
+            - name: http
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "512Mi"
+            limits:
+              cpu: "150m"
+              memory: "512Mi"
+          livenessProbe:
+            httpGet:
+              path: /health-check
+              port: http
+            timeoutSeconds: 5
+            initialDelaySeconds: 60
+          readinessProbe:
+            httpGet:
+              path: /health-check
+              port: http
+            timeoutSeconds: 5
+            initialDelaySeconds: 60

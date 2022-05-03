@@ -1,7 +1,9 @@
-#Docker Spring
+# Spring boot application for testing with Kubernetes health checks
+
+# Docker Spring
 https://spring.io/guides/gs/spring-boot-docker/#scratch
 
-#./gradlew build docker
+# ./gradlew build docker
 ./gradlew build
 
 https://spring.io/guides/gs/spring-boot-docker/
@@ -14,7 +16,7 @@ docker build -t spring-boot-app .
 docker run -p 8080:8080 -t com.fsistemas/dockerboot-demo
 docker run -p 8080:8080 -t com.fsistemas/dockerboot-demo -rm
 
-##Docker/Gradle:
+## Docker/Gradle:
 https://stackoverflow.com/questions/46792438/build-gradle-project-inside-a-docker
 https://codefresh.io/docs/docs/learn-by-example/java/gradle/
 https://aboullaite.me/multi-stage-docker-java/
@@ -22,11 +24,11 @@ https://stackoverflow.com/questions/58921992/build-docker-image-that-used-java-1
 https://github.com/WISVCH/docker-spring-boot-base
 https://dzone.com/articles/spring-boot-run-and-build-in-docker
 
-##Memory & Settings:
+## Memory & Settings:
 https://merikan.com/2019/04/jvm-in-a-container/
 
 
-#Kubernetes:
+# Kubernetes:
 https://itnext.io/migrating-a-spring-boot-service-to-kubernetes-in-5-steps-7c1702da81b6
 
 kubectl apply -f secrets.yml
@@ -34,10 +36,10 @@ kubectl apply -f deployment.yml
 kubectl apply -f service.yml
 kubectl apply -f ingress.yml
 
-#kubectl set image deployment/spring-boot-deployment spring-boot-app=your-new-image
+# kubectl set image deployment/spring-boot-deployment spring-boot-app=your-new-image
 kubectl scale deployment spring-boot-deployment --replicas=10
 
-#Scaling
+# Scaling
 https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#scaling-a-deployment
 
 kubectl apply -f 01-deployment-full.yml
